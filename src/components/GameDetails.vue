@@ -20,11 +20,11 @@
 
     <div v-if="connectedToGame">
       <h2>Conectado al juego</h2>
-    </div>
 
-    <!-- Agregar el componente GameBoard -->
-    <GameBoard :imageUrl_0="rutaAlPng" :imageUrl_1="rutaAlPng_2" :imageUrl_2="rutaAlPng_2" :imageUrl_3="rutaAlPng_2"
-      :imageUrl_4="rutaAlPng_2" :imageUrl_5="rutaAlPng_2" :imageUrl_reverse="rutaAlPng_reverse" :player_turn=1 />
+      <!-- Agregar el componente GameBoard -->
+      <GameBoard :imageUrl_0="rutaAlPng" :imageUrl_1="rutaAlPng_2" :imageUrl_2="rutaAlPng_2" :imageUrl_3="rutaAlPng_2"
+        :imageUrl_4="rutaAlPng_2" :imageUrl_5="rutaAlPng_2" :imageUrl_reverse="rutaAlPng_reverse" :player_turn=1 />
+    </div>
 
   </div>
 </template>
@@ -52,11 +52,6 @@ export default {
       username: '',
     };
   },
-  mounted() {
-    // Usar el servicio WebSocket para recibir mensajes
-    WebSocketService.stompClient.onConnect = this.onWebSocketConnect;
-    console.log("Tenemos el websocketservice", WebSocketService)
-  },
   methods: {
     showModal() {
       this.isModalVisible = true; // Renombramos showModal a isModalVisible
@@ -71,6 +66,9 @@ export default {
             this.username
           );
           console.log('Jugador añadido al juego:', response);
+
+          this.connectToWebsoket()
+
           // Aquí puedes manejar la respuesta del servidor, si es necesario
         } catch (error) {
           console.error('Error al añadir el jugador al juego:', error);
@@ -81,14 +79,23 @@ export default {
         alert('Por favor, introduce un nombre de usuario válido.');
       }
     },
+    connectToWebsoket() {
+      // Usar el servicio WebSocket para recibir mensajes
+      // WebSocketService.stompClient.onConnect = this.onWebSocketConnect;
+      WebSocketService.connect();
+      console.log("Tenemos el websocketservice", WebSocketService)
+      this.connectedToGame = true;
+    },
     cancelInput() {
       // Cierra la ventana emergente sin hacer nada más
       this.isModalVisible = false; // Renombramos showModal a isModalVisible
     },
+    /*
     onWebSocketConnect() {
       console.log('WebSocket connected desde GameDetails.vue');
       this.connectedToGame = true;
     },
+    */
   },
 };
 </script>
